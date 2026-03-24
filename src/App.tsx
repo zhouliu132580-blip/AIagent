@@ -23,7 +23,8 @@ import {
   User,
   Bot,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Radar
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
@@ -41,6 +42,8 @@ import {
   Pie
 } from 'recharts';
 import { cn } from './lib/utils';
+import DataElfView from './components/DataElfView';
+import SmartBuildView from './components/SmartBuildView';
 
 // --- Types ---
 
@@ -174,17 +177,20 @@ const getAIResponse = async (input: string, history: Message[]): Promise<Partial
 
 // --- Components ---
 
-const SidebarItem = ({ icon: Icon, label, active, onClick, badge }: any) => (
+const SidebarItem = ({ icon: Icon, label, active, onClick, badge, disabled }: any) => (
   <button 
-    onClick={onClick}
+    onClick={disabled ? undefined : onClick}
+    disabled={disabled}
     className={cn(
       "w-full flex items-center gap-3 px-4 py-3 text-sm transition-all rounded-lg group",
-      active ? "bg-blue-50 text-blue-600 font-medium" : "text-gray-600 hover:bg-gray-50"
+      active ? "bg-blue-50 text-blue-600 font-medium" : "text-gray-600 hover:bg-gray-50",
+      disabled && "opacity-40 cursor-not-allowed grayscale hover:bg-transparent"
     )}
   >
     <Icon size={18} className={cn(active ? "text-blue-600" : "text-gray-400 group-hover:text-gray-600")} />
     <span className="flex-1 text-left">{label}</span>
     {badge && <span className="px-1.5 py-0.5 text-[10px] bg-blue-100 text-blue-600 rounded-full">{badge}</span>}
+    {disabled && <span className="px-1.5 py-0.5 text-[9px] bg-gray-100 text-gray-400 rounded-full border border-gray-200">建设中</span>}
   </button>
 );
 
@@ -206,14 +212,15 @@ export default function App() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [isFeedingData, setIsFeedingData] = useState(false);
-  const [dataLoaded, setDataLoaded] = useState(false);
   const [history, setHistory] = useState<HistoryItem[]>([
-    { id: '1', title: '客户1063647333损益...' },
-    { id: '2', title: '网点769AV损益情况' },
-    { id: '3', title: '成本亏损在哪' },
+    { id: '1', title: '本组织近7天理赔占收比、经手...' },
+    { id: '2', title: '帮我做一个近一周的收入分析（寄件口径）' },
+    { id: '3', title: '就近一周而言，本组织的主要质量问题是什么？' },
+    { id: '4', title: '帮我做一个25年较去年1-9月份对比的利润分析' },
+    { id: '5', title: '2月相比1月来说，收入表现如何' },
   ]);
   const [activeTab, setActiveTab] = useState('chat');
+  const [currentView, setCurrentView] = useState<'home' | 'data-elf' | 'smart-build'>('home');
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -225,7 +232,7 @@ export default function App() {
     scrollToBottom();
   }, [messages]);
 
-  const handleSend = async (text: string = input) => {
+  const handleSend = async (text: string = input, prefixMessages?: Message[]) => {
     if (!text.trim()) return;
 
     const userMsg: Message = {
@@ -234,14 +241,17 @@ export default function App() {
       content: text,
     };
 
-    setMessages(prev => [...prev, userMsg]);
+    const currentMessages = prefixMessages || messages;
+    const newMessages = [...currentMessages, userMsg];
+    
+    setMessages(newMessages);
     setInput('');
 
     // Simulate AI thinking
     const aiMsgId = (Date.now() + 1).toString();
     setMessages(prev => [...prev, { id: aiMsgId, role: 'assistant', content: '', isLoading: true }]);
 
-    const response = await getAIResponse(text, messages);
+    const response = await getAIResponse(text, newMessages);
     
     setTimeout(() => {
       setMessages(prev => prev.map(m => m.id === aiMsgId ? { 
@@ -253,22 +263,8 @@ export default function App() {
     }, 800);
   };
 
-  const handleFeedData = () => {
-    setIsFeedingData(true);
-    setTimeout(() => {
-      setIsFeedingData(false);
-      setDataLoaded(true);
-      setMessages(prev => [...prev, {
-        id: Date.now().toString(),
-        role: 'assistant',
-        content: "✅ 数据已成功加载到AI模型。当前已加载2026年3月经营数据，您可以开始提问了。",
-      }]);
-    }, 1500);
-  };
-
   const startNewChat = () => {
     setMessages([]);
-    setDataLoaded(false);
   };
 
   return (
@@ -298,9 +294,9 @@ export default function App() {
 
         <nav className="flex-1 px-2 space-y-1 overflow-y-auto">
           <SidebarItem icon={FileText} label="我的报告" active={activeTab === 'reports'} onClick={() => setActiveTab('reports')} />
-          <SidebarItem icon={LayoutDashboard} label="场景管理" active={activeTab === 'scenarios'} onClick={() => setActiveTab('scenarios')} />
-          <SidebarItem icon={Wrench} label="技能库" active={activeTab === 'skills'} onClick={() => setActiveTab('skills')} />
-          <SidebarItem icon={RotateCcw} label="闭环管理" active={activeTab === 'loop'} onClick={() => setActiveTab('loop')} />
+          <SidebarItem icon={LayoutDashboard} label="场景管理" disabled={true} active={activeTab === 'scenarios'} onClick={() => setActiveTab('scenarios')} />
+          <SidebarItem icon={Wrench} label="技能库" disabled={true} active={activeTab === 'skills'} onClick={() => setActiveTab('skills')} />
+          <SidebarItem icon={RotateCcw} label="闭环管理" disabled={true} active={activeTab === 'loop'} onClick={() => setActiveTab('loop')} />
           
           <div className="mt-8 px-4 mb-2">
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">历史对话</p>
@@ -318,8 +314,14 @@ export default function App() {
 
       {/* --- Main Content --- */}
       <main className="flex-1 flex flex-col relative min-w-0 bg-white">
-        {/* Header */}
-        <header className="h-14 border-b border-gray-100 flex items-center justify-between px-6 bg-white/80 backdrop-blur-md sticky top-0 z-10">
+        {currentView === 'data-elf' ? (
+          <DataElfView onBack={() => setCurrentView('home')} />
+        ) : currentView === 'smart-build' ? (
+          <SmartBuildView onBack={() => setCurrentView('home')} />
+        ) : (
+          <>
+            {/* Header */}
+            <header className="h-14 border-b border-gray-100 flex items-center justify-between px-6 bg-white/80 backdrop-blur-md sticky top-0 z-10">
           <div className="flex items-center gap-4">
             <button 
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -369,14 +371,28 @@ export default function App() {
                     <ScenarioCard 
                       title="业务区健康经营诊断" 
                       description="帮我看下深莞区上个月经营健康度怎么样" 
-                      icon={User} 
-                      onClick={() => handleSend('分析业务区健康经营诊断')}
+                      icon={Radar} 
+                      onClick={() => {
+                        const introMsg: Message = {
+                          id: 'intro-' + Date.now(),
+                          role: 'assistant',
+                          content: '您好，我是经营小Q，已经接入并学习了【业务区经营诊断看板数据】，你可以直接问我类似“帮我看一下上海区的健康度情况”，我会为您进行经营健康五维度体检分析',
+                        };
+                        handleSend('分析业务区健康经营诊断', [introMsg]);
+                      }}
                     />
                     <ScenarioCard 
                       title="分拨区健康经营诊断" 
                       description="帮我看下华南分拨区上个月经营健康表现如何，主要弱项在哪" 
                       icon={MessageSquare} 
-                      onClick={() => handleSend('分析分拨区健康经营诊断')}
+                      onClick={() => {
+                        const introMsg: Message = {
+                          id: 'intro-' + Date.now(),
+                          role: 'assistant',
+                          content: '您好，我是经营小Q，已经接入并学习了【分拨区经营诊断看板数据】，你可以直接问我类似“帮我看一下上海区的健康度情况”，我会为您进行经营健康五维度体检分析',
+                        };
+                        handleSend('分析分拨区健康经营诊断', [introMsg]);
+                      }}
                     />
                     <ScenarioCard 
                       title="行业健康经营诊断" 
@@ -510,22 +526,25 @@ export default function App() {
             {/* Quick Actions */}
             <div className="flex items-center gap-2 mb-4 overflow-x-auto scrollbar-hide py-1">
               <button 
-                onClick={handleFeedData}
-                className={cn(
-                  "flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-medium transition-all shrink-0",
-                  dataLoaded ? "bg-green-50 text-green-600 border border-green-100" : "bg-blue-50 text-blue-600 border border-blue-100 hover:bg-blue-100"
-                )}
+                onClick={() => setCurrentView('data-elf')}
+                className="flex items-center gap-2 px-4 py-2 bg-gray-50 text-gray-600 border border-gray-100 rounded-xl text-xs font-medium hover:bg-gray-100 transition-all shrink-0"
               >
-                {dataLoaded ? <CheckCircle2 size={14} /> : <Database size={14} />}
-                {dataLoaded ? "已加载当月数据" : "智能问数"}
+                <Database size={14} />
+                智能问数
               </button>
-              <button className="flex items-center gap-2 px-4 py-2 bg-gray-50 text-gray-600 border border-gray-100 rounded-xl text-xs font-medium hover:bg-gray-100 transition-all shrink-0">
+              <button 
+                onClick={() => setCurrentView('smart-build')}
+                className="flex items-center gap-2 px-4 py-2 bg-gray-50 text-gray-600 border border-gray-100 rounded-xl text-xs font-medium hover:bg-gray-100 transition-all shrink-0"
+              >
                 <LayoutDashboard size={14} />
                 智能搭建
               </button>
-              <button className="flex items-center gap-2 px-4 py-2 bg-gray-50 text-gray-600 border border-gray-100 rounded-xl text-xs font-medium hover:bg-gray-100 transition-all shrink-0">
-                <MessageSquare size={14} />
-                智能搭建
+              <button 
+                disabled
+                className="flex items-center gap-2 px-4 py-2 bg-gray-50 text-gray-400 border border-gray-100 rounded-xl text-xs font-medium cursor-not-allowed shrink-0"
+              >
+                <TrendingUp size={14} />
+                深度洞察 (建设中)
               </button>
             </div>
 
@@ -542,7 +561,7 @@ export default function App() {
                       handleSend();
                     }
                   }}
-                  placeholder="作为资深财务分析专家，想对负责的客户 2026-01 的收益亏损情况进行深度解读..."
+                  placeholder="作为资深经营分析专家，帮我看下华南分拨区上个月的经营健康度表现怎么样，有哪些弱项"
                   className="w-full bg-transparent border-none focus:ring-0 text-sm p-3 min-h-[100px] resize-none scrollbar-hide"
                 />
                 <div className="flex items-center justify-between px-2 pb-2">
@@ -578,25 +597,11 @@ export default function App() {
             </p>
           </div>
         </div>
+        </>
+        )}
       </main>
 
-      {/* Loading Overlay for Data Feeding */}
-      <AnimatePresence>
-        {isFeedingData && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/20 backdrop-blur-sm flex items-center justify-center"
-          >
-            <div className="bg-white p-8 rounded-3xl shadow-2xl flex flex-col items-center gap-4">
-              <div className="w-12 h-12 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin" />
-              <p className="font-semibold text-gray-900">正在加载经营数据...</p>
-              <p className="text-xs text-gray-500">正在同步 2026年3月 财务指标</p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Loading Overlay for Data Feeding removed */}
     </div>
   );
 }

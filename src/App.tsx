@@ -591,10 +591,6 @@ export default function App() {
                 </div>
               </div>
             </div>
-            
-            <p className="text-[10px] text-center text-gray-400 mt-4">
-              AI 助手可能会产生错误，请核实重要信息。
-            </p>
           </div>
         </div>
         </>

@@ -279,7 +279,7 @@ export default function App() {
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
             <TrendingUp size={18} className="text-white" />
           </div>
-          <h1 className="font-bold text-lg tracking-tight">经营服务智能体</h1>
+          <h1 className="font-bold text-lg tracking-tight">经营智能助手</h1>
         </div>
 
         <div className="px-4 mb-6">
@@ -355,7 +355,7 @@ export default function App() {
                     洞察数字背后的经营真相
                   </h2>
                   <p className="text-gray-500 text-lg leading-relaxed">
-                    您好，我是经营小Q，全面支持您从数据到决策。
+                    您好，我是经营智能助手，全面支持您从数据到决策。
                   </p>
                 </motion.div>
 

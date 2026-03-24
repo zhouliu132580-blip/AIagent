@@ -27,6 +27,7 @@ import {
   Radar
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Toaster, toast } from 'sonner';
 import { 
   BarChart, 
   Bar, 
@@ -269,6 +270,7 @@ export default function App() {
 
   return (
     <div className="flex h-screen bg-[#F8FAFC] font-sans text-gray-900 overflow-hidden">
+      <Toaster position="top-center" />
       {/* --- Sidebar --- */}
       <motion.aside 
         initial={false}
@@ -369,42 +371,44 @@ export default function App() {
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <ScenarioCard 
-                      title="业务区健康经营诊断" 
-                      description="帮我看下深莞区上个月经营健康度怎么样" 
+                      title="集团健康经营诊断" 
+                      description="帮我分析下集团上个月经营健康度怎么样" 
                       icon={Radar} 
-                      onClick={() => {
-                        const introMsg: Message = {
-                          id: 'intro-' + Date.now(),
-                          role: 'assistant',
-                          content: '您好，我是经营小Q，已经接入并学习了【业务区经营诊断看板数据】，你可以直接问我类似“帮我看一下上海区的健康度情况”，我会为您进行经营健康五维度体检分析',
-                        };
-                        handleSend('分析业务区健康经营诊断', [introMsg]);
-                      }}
+                      onClick={() => toast('建设中', { 
+                        icon: <AlertCircle className="text-orange-500" />, 
+                        className: 'text-orange-500 font-medium' 
+                      })}
                     />
                     <ScenarioCard 
-                      title="分拨区健康经营诊断" 
-                      description="帮我看下华南分拨区上个月经营健康表现如何，主要弱项在哪" 
+                      title="地区健康经营诊断" 
+                      description="帮我看下华南区上个月经营健康表现如何，主要弱项在哪" 
                       icon={MessageSquare} 
                       onClick={() => {
                         const introMsg: Message = {
                           id: 'intro-' + Date.now(),
                           role: 'assistant',
-                          content: '您好，我是经营小Q，已经接入并学习了【分拨区经营诊断看板数据】，你可以直接问我类似“帮我看一下上海区的健康度情况”，我会为您进行经营健康五维度体检分析',
+                          content: '您好，我是经营智能助手，已经接入并学习了【地区经营诊断看板数据】，你可以直接问我类似“帮我看一下华南区的健康度情况”，我会为您进行经营健康五维度体检分析',
                         };
-                        handleSend('分析分拨区健康经营诊断', [introMsg]);
+                        handleSend('分析地区健康经营诊断', [introMsg]);
                       }}
                     />
                     <ScenarioCard 
-                      title="行业健康经营诊断" 
-                      description="帮我分析下高科技行业经营健康表现和主要弱项在哪" 
+                      title="经营单元健康经营诊断" 
+                      description="帮我分析下小件组织经营健康表现和主要弱项在哪" 
                       icon={BarChart3} 
-                      onClick={() => handleSend('分析行业健康经营诊断')}
+                      onClick={() => toast('建设中', { 
+                        icon: <AlertCircle className="text-orange-500" />, 
+                        className: 'text-orange-500 font-medium' 
+                      })}
                     />
                     <ScenarioCard 
-                      title="中转场健康经营诊断" 
-                      description="帮我看下五和中转场上个月经营健康表现如何，主要弱项在哪" 
+                      title="职能条线健康经营诊断" 
+                      description="帮我分析下F线经营健康表现和主要弱项在哪" 
                       icon={PieChartIcon} 
-                      onClick={() => handleSend('分析中转场健康经营诊断')}
+                      onClick={() => toast('建设中', { 
+                        icon: <AlertCircle className="text-orange-500" />, 
+                        className: 'text-orange-500 font-medium' 
+                      })}
                     />
                   </div>
                 </div>

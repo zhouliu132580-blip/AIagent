@@ -1,5 +1,5 @@
 {
-  "name": "经营服务智能体 - 健康经营诊断看板",
+  "name": "经营智能助手",
   "description": "基于AI的健康经营诊断看板，支持多维分析、喂数演示、多轮问答及结构化报告生成。",
   "requestFramePermissions": []
 }

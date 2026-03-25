@@ -356,10 +356,10 @@ export default function App() {
                   className="relative mb-16 w-full max-w-3xl text-center"
                 >
                   <h2 className="text-5xl font-extrabold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-6 leading-tight">
-                    经营问数
+                    洞察数字背后的经营真相
                   </h2>
                   <p className="text-gray-500 text-lg leading-relaxed">
-                    您好 我是经营智能助手，帮您快速查询经营结果，及时解决经营问题。
+                    您好，我是经营智能助手，全面支持您从数据到决策。
                   </p>
                 </motion.div>
 

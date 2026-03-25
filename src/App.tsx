@@ -191,7 +191,7 @@ const SidebarItem = ({ icon: Icon, label, active, onClick, badge, disabled }: an
     <Icon size={18} className={cn(active ? "text-blue-600" : "text-gray-400 group-hover:text-gray-600")} />
     <span className="flex-1 text-left">{label}</span>
     {badge && <span className="px-1.5 py-0.5 text-[10px] bg-blue-100 text-blue-600 rounded-full">{badge}</span>}
-    {disabled && <span className="px-1.5 py-0.5 text-[9px] bg-gray-100 text-gray-400 rounded-full border border-gray-200">建设中</span>}
+    {disabled && <span className="px-1.5 py-0.5 text-[9px] bg-gray-100 text-gray-400 rounded-full border border-gray-200">建设中，敬请期待</span>}
   </button>
 );
 
@@ -361,8 +361,83 @@ export default function App() {
                   </p>
                 </motion.div>
 
+                {/* Input Area for Empty State */}
+                <div className="w-full max-w-4xl mb-16">
+                  {/* Quick Actions */}
+                  <div className="flex items-center justify-center gap-2 mb-6 overflow-x-auto scrollbar-hide py-1">
+                    <button 
+                      onClick={() => setCurrentView('data-elf')}
+                      className="flex items-center gap-2 px-4 py-2 bg-white text-gray-600 border border-gray-100 rounded-xl text-xs font-medium hover:bg-gray-100 transition-all shadow-sm shrink-0"
+                    >
+                      <Database size={14} />
+                      智能问数
+                    </button>
+                    <button 
+                      onClick={() => setCurrentView('smart-build')}
+                      className="flex items-center gap-2 px-4 py-2 bg-white text-gray-600 border border-gray-100 rounded-xl text-xs font-medium hover:bg-gray-100 transition-all shadow-sm shrink-0"
+                    >
+                      <LayoutDashboard size={14} />
+                      智能搭建
+                    </button>
+                    <button 
+                      onClick={() => toast('建设中，敬请期待', { 
+                        icon: <AlertCircle className="text-orange-500" size={16} />, 
+                        className: 'text-orange-500 font-medium' 
+                      })}
+                      className="flex items-center gap-2 px-4 py-2 bg-white text-gray-600 border border-gray-100 rounded-xl text-xs font-medium hover:bg-gray-100 transition-all shadow-sm shrink-0"
+                    >
+                      <TrendingUp size={14} />
+                      深度洞察
+                    </button>
+                  </div>
+
+                  {/* Main Input */}
+                  <div className="relative group">
+                    <div className="absolute inset-0 bg-blue-500/5 blur-xl group-focus-within:bg-blue-500/10 transition-all rounded-3xl" />
+                    <div className="relative bg-white border border-gray-200 rounded-2xl p-2 shadow-sm focus-within:border-blue-400 transition-all">
+                      <textarea 
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            handleSend();
+                          }
+                        }}
+                        placeholder="作为资深经营分析专家，帮我看下华南分拨区上个月的经营健康度表现怎么样，有哪些弱项"
+                        className="w-full bg-transparent border-none focus:ring-0 text-sm p-3 min-h-[100px] resize-none scrollbar-hide"
+                      />
+                      <div className="flex items-center justify-between px-2 pb-2">
+                        <div className="flex items-center gap-1">
+                          <button className="p-2 hover:bg-gray-100 rounded-lg text-gray-400 transition-colors">
+                            <Plus size={18} />
+                          </button>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button 
+                            onClick={() => setInput('')}
+                            className="px-4 py-2 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                          >
+                            清空
+                          </button>
+                          <button 
+                            onClick={() => handleSend()}
+                            disabled={!input.trim()}
+                            className={cn(
+                              "p-2 rounded-xl transition-all",
+                              input.trim() ? "bg-blue-600 text-white shadow-lg shadow-blue-200" : "bg-gray-100 text-gray-300"
+                            )}
+                          >
+                            <Send size={18} />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Scenario Cards */}
-                <div className="w-full mt-12">
+                <div className="w-full">
                   <div className="flex items-center justify-between mb-6">
                     <h3 className="font-bold text-gray-800">主题场景</h3>
                     <button className="text-xs text-blue-600 flex items-center gap-1 hover:underline">
@@ -374,8 +449,8 @@ export default function App() {
                       title="集团健康经营诊断" 
                       description="帮我分析下集团上个月经营健康度怎么样" 
                       icon={Radar} 
-                      onClick={() => toast('建设中', { 
-                        icon: <AlertCircle className="text-orange-500" />, 
+                      onClick={() => toast('建设中，敬请期待', { 
+                        icon: <AlertCircle className="text-orange-500" size={16} />, 
                         className: 'text-orange-500 font-medium' 
                       })}
                     />
@@ -396,8 +471,8 @@ export default function App() {
                       title="经营单元健康经营诊断" 
                       description="帮我分析下小件组织经营健康表现和主要弱项在哪" 
                       icon={BarChart3} 
-                      onClick={() => toast('建设中', { 
-                        icon: <AlertCircle className="text-orange-500" />, 
+                      onClick={() => toast('建设中，敬请期待', { 
+                        icon: <AlertCircle className="text-orange-500" size={16} />, 
                         className: 'text-orange-500 font-medium' 
                       })}
                     />
@@ -405,8 +480,8 @@ export default function App() {
                       title="职能条线健康经营诊断" 
                       description="帮我分析下F线经营健康表现和主要弱项在哪" 
                       icon={PieChartIcon} 
-                      onClick={() => toast('建设中', { 
-                        icon: <AlertCircle className="text-orange-500" />, 
+                      onClick={() => toast('建设中，敬请期待', { 
+                        icon: <AlertCircle className="text-orange-500" size={16} />, 
                         className: 'text-orange-500 font-medium' 
                       })}
                     />
@@ -525,81 +600,83 @@ export default function App() {
         </div>
 
         {/* Input Area */}
-        <div className="px-6 pb-8 bg-white">
-          <div className="max-w-4xl mx-auto">
-            {/* Quick Actions */}
-            <div className="flex items-center gap-2 mb-4 overflow-x-auto scrollbar-hide py-1">
-              <button 
-                onClick={() => setCurrentView('data-elf')}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-50 text-gray-600 border border-gray-100 rounded-xl text-xs font-medium hover:bg-gray-100 transition-all shrink-0"
-              >
-                <Database size={14} />
-                智能问数
-              </button>
-              <button 
-                onClick={() => setCurrentView('smart-build')}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-50 text-gray-600 border border-gray-100 rounded-xl text-xs font-medium hover:bg-gray-100 transition-all shrink-0"
-              >
-                <LayoutDashboard size={14} />
-                智能搭建
-              </button>
-              <button 
-                onClick={() => toast('建设中', { 
-                  icon: <AlertCircle className="text-orange-500" />, 
-                  className: 'text-orange-500 font-medium' 
-                })}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-50 text-gray-600 border border-gray-100 rounded-xl text-xs font-medium hover:bg-gray-100 transition-all shrink-0"
-              >
-                <TrendingUp size={14} />
-                深度洞察
-              </button>
-            </div>
+        {messages.length > 0 && (
+          <div className="px-6 pb-8 bg-white">
+            <div className="max-w-4xl mx-auto">
+              {/* Quick Actions */}
+              <div className="flex items-center gap-2 mb-4 overflow-x-auto scrollbar-hide py-1">
+                <button 
+                  onClick={() => setCurrentView('data-elf')}
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-50 text-gray-600 border border-gray-100 rounded-xl text-xs font-medium hover:bg-gray-100 transition-all shrink-0"
+                >
+                  <Database size={14} />
+                  智能问数
+                </button>
+                <button 
+                  onClick={() => setCurrentView('smart-build')}
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-50 text-gray-600 border border-gray-100 rounded-xl text-xs font-medium hover:bg-gray-100 transition-all shrink-0"
+                >
+                  <LayoutDashboard size={14} />
+                  智能搭建
+                </button>
+                <button 
+                  onClick={() => toast('建设中，敬请期待', { 
+                    icon: <AlertCircle className="text-orange-500" size={16} />, 
+                    className: 'text-orange-500 font-medium' 
+                  })}
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-50 text-gray-600 border border-gray-100 rounded-xl text-xs font-medium hover:bg-gray-100 transition-all shrink-0"
+                >
+                  <TrendingUp size={14} />
+                  深度洞察
+                </button>
+              </div>
 
-            {/* Main Input */}
-            <div className="relative group">
-              <div className="absolute inset-0 bg-blue-500/5 blur-xl group-focus-within:bg-blue-500/10 transition-all rounded-3xl" />
-              <div className="relative bg-white border border-gray-200 rounded-2xl p-2 shadow-sm focus-within:border-blue-400 transition-all">
-                <textarea 
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSend();
-                    }
-                  }}
-                  placeholder="作为资深经营分析专家，帮我看下华南分拨区上个月的经营健康度表现怎么样，有哪些弱项"
-                  className="w-full bg-transparent border-none focus:ring-0 text-sm p-3 min-h-[100px] resize-none scrollbar-hide"
-                />
-                <div className="flex items-center justify-between px-2 pb-2">
-                  <div className="flex items-center gap-1">
-                    <button className="p-2 hover:bg-gray-100 rounded-lg text-gray-400 transition-colors">
-                      <Plus size={18} />
-                    </button>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button 
-                      onClick={() => setInput('')}
-                      className="px-4 py-2 text-xs text-gray-400 hover:text-gray-600 transition-colors"
-                    >
-                      清空
-                    </button>
-                    <button 
-                      onClick={() => handleSend()}
-                      disabled={!input.trim()}
-                      className={cn(
-                        "p-2 rounded-xl transition-all",
-                        input.trim() ? "bg-blue-600 text-white shadow-lg shadow-blue-200" : "bg-gray-100 text-gray-300"
-                      )}
-                    >
-                      <Send size={18} />
-                    </button>
+              {/* Main Input */}
+              <div className="relative group">
+                <div className="absolute inset-0 bg-blue-500/5 blur-xl group-focus-within:bg-blue-500/10 transition-all rounded-3xl" />
+                <div className="relative bg-white border border-gray-200 rounded-2xl p-2 shadow-sm focus-within:border-blue-400 transition-all">
+                  <textarea 
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSend();
+                      }
+                    }}
+                    placeholder="作为资深经营分析专家，帮我看下华南分拨区上个月的经营健康度表现怎么样，有哪些弱项"
+                    className="w-full bg-transparent border-none focus:ring-0 text-sm p-3 min-h-[100px] resize-none scrollbar-hide"
+                  />
+                  <div className="flex items-center justify-between px-2 pb-2">
+                    <div className="flex items-center gap-1">
+                      <button className="p-2 hover:bg-gray-100 rounded-lg text-gray-400 transition-colors">
+                        <Plus size={18} />
+                      </button>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button 
+                        onClick={() => setInput('')}
+                        className="px-4 py-2 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                      >
+                        清空
+                      </button>
+                      <button 
+                        onClick={() => handleSend()}
+                        disabled={!input.trim()}
+                        className={cn(
+                          "p-2 rounded-xl transition-all",
+                          input.trim() ? "bg-blue-600 text-white shadow-lg shadow-blue-200" : "bg-gray-100 text-gray-300"
+                        )}
+                      >
+                        <Send size={18} />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
         </>
         )}
       </main>

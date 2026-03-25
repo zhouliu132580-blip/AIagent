@@ -354,10 +354,10 @@ export default function App() {
                   className="relative mb-16 w-full max-w-3xl text-center"
                 >
                   <h2 className="text-5xl font-extrabold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-6 leading-tight">
-                    洞察数字背后的经营真相
+                    经营问数
                   </h2>
                   <p className="text-gray-500 text-lg leading-relaxed">
-                    您好，我是经营智能助手，全面支持您从数据到决策。
+                    您好 我是经营智能助手，帮您快速查询经营结果，及时解决经营问题。
                   </p>
                 </motion.div>
 
@@ -544,11 +544,14 @@ export default function App() {
                 智能搭建
               </button>
               <button 
-                disabled
-                className="flex items-center gap-2 px-4 py-2 bg-gray-50 text-gray-400 border border-gray-100 rounded-xl text-xs font-medium cursor-not-allowed shrink-0"
+                onClick={() => toast('建设中', { 
+                  icon: <AlertCircle className="text-orange-500" />, 
+                  className: 'text-orange-500 font-medium' 
+                })}
+                className="flex items-center gap-2 px-4 py-2 bg-gray-50 text-gray-600 border border-gray-100 rounded-xl text-xs font-medium hover:bg-gray-100 transition-all shrink-0"
               >
                 <TrendingUp size={14} />
-                深度洞察 (建设中)
+                深度洞察
               </button>
             </div>
 

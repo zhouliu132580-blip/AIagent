@@ -5,6 +5,8 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { 
+  PanelLeftClose,
+  PanelLeftOpen,
   MessageSquare, 
   Plus, 
   FileText, 
@@ -275,7 +277,11 @@ export default function App() {
       <motion.aside 
         initial={false}
         animate={{ width: isSidebarOpen ? 260 : 0, opacity: isSidebarOpen ? 1 : 0 }}
-        className="bg-white border-r border-gray-200 flex flex-col relative z-20"
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        className={cn(
+          "bg-white flex flex-col relative z-20 overflow-hidden",
+          isSidebarOpen ? "border-r border-gray-200" : "border-none"
+        )}
       >
         <div className="p-6 flex items-center gap-2">
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
@@ -326,20 +332,16 @@ export default function App() {
             <header className="h-14 border-b border-gray-100 flex items-center justify-between px-6 bg-white/80 backdrop-blur-md sticky top-0 z-10">
           <div className="flex items-center gap-4">
             <button 
-              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              onClick={() => setIsSidebarOpen(prev => !prev)}
               className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-500 transition-colors"
+              title={isSidebarOpen ? "收起侧边栏" : "展开侧边栏"}
             >
-              <LayoutDashboard size={20} />
+              {isSidebarOpen ? <PanelLeftClose size={20} /> : <PanelLeftOpen size={20} />}
             </button>
             <h2 className="text-sm font-medium text-gray-600">新对话</h2>
           </div>
           <div className="flex items-center gap-3">
-            <button className="p-2 hover:bg-gray-100 rounded-full text-gray-400">
-              <Search size={18} />
-            </button>
-            <button className="p-2 hover:bg-gray-100 rounded-full text-gray-400">
-              <Download size={18} />
-            </button>
+            {/* Search and Download buttons removed */}
           </div>
         </header>
 

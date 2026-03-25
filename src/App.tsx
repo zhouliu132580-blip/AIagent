@@ -395,8 +395,8 @@ export default function App() {
 
                   {/* Main Input */}
                   <div className="relative group">
-                    <div className="absolute inset-0 bg-blue-500/5 blur-xl group-focus-within:bg-blue-500/10 transition-all rounded-3xl" />
-                    <div className="relative bg-white border border-gray-200 rounded-2xl p-2 shadow-sm focus-within:border-blue-400 transition-all">
+                    <div className="absolute inset-0 bg-blue-500/10 blur-2xl group-focus-within:bg-blue-500/20 transition-all duration-500 rounded-3xl" />
+                    <div className="relative bg-white border border-gray-200 rounded-2xl p-2 shadow-sm focus-within:border-blue-400 focus-within:ring-[6px] focus-within:ring-blue-500/15 focus-within:shadow-[0_0_30px_-5px_rgba(59,130,246,0.3)] transition-all duration-500">
                       <textarea 
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
@@ -635,8 +635,8 @@ export default function App() {
 
               {/* Main Input */}
               <div className="relative group">
-                <div className="absolute inset-0 bg-blue-500/5 blur-xl group-focus-within:bg-blue-500/10 transition-all rounded-3xl" />
-                <div className="relative bg-white border border-gray-200 rounded-2xl p-2 shadow-sm focus-within:border-blue-400 transition-all">
+                <div className="absolute inset-0 bg-blue-500/10 blur-2xl group-focus-within:bg-blue-500/20 transition-all duration-500 rounded-3xl" />
+                <div className="relative bg-white border border-gray-200 rounded-2xl p-2 shadow-sm focus-within:border-blue-400 focus-within:ring-[6px] focus-within:ring-blue-500/15 focus-within:shadow-[0_0_30px_-5px_rgba(59,130,246,0.3)] transition-all duration-500">
                   <textarea 
                     value={input}
                     onChange={(e) => setInput(e.target.value)}

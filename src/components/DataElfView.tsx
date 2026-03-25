@@ -123,40 +123,42 @@ export default function DataElfView({ onBack }: DataElfViewProps) {
             </div>
           </div>
 
-          {/* Input Box */}
-          <div className="bg-white border border-gray-200 rounded-2xl shadow-xl shadow-blue-900/5 focus-within:border-blue-400 transition-all overflow-hidden">
-            <textarea 
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="请直接输入您需要分析的数据，如：近一个月的收入相比去年做个详细分析"
-              className="w-full p-5 text-sm bg-transparent border-none focus:ring-0 min-h-[100px] resize-none placeholder:text-gray-400"
-            />
-            
-            <div className="flex items-center justify-between px-5 py-4 bg-gray-50/30 border-t border-gray-50">
-              <div className="flex items-center gap-6">
-                <button className="flex items-center gap-2 text-xs text-gray-500 hover:text-blue-600 transition-colors">
-                  <div className="w-4 h-4 border border-gray-300 rounded flex items-center justify-center" />
-                  上下文理解
-                </button>
-                <button className="flex items-center gap-2 text-xs text-gray-500 hover:text-blue-600 transition-colors">
-                  <LayoutDashboard size={14} />
-                  快捷提问
-                </button>
-                <button className="flex items-center gap-2 text-xs text-gray-500 hover:text-blue-600 transition-colors">
-                  <Database size={14} />
-                  智能路由
-                </button>
-                <button className="flex items-center gap-2 text-xs text-gray-500 hover:text-blue-600 transition-colors">
-                  <Grid size={14} />
-                  更多
+          <div className="relative group">
+            <div className="absolute inset-0 bg-blue-500/10 blur-2xl group-focus-within:bg-blue-500/20 transition-all duration-500 rounded-3xl" />
+            <div className="relative bg-white border border-gray-200 rounded-2xl shadow-sm focus-within:border-blue-400 focus-within:ring-[6px] focus-within:ring-blue-500/15 focus-within:shadow-[0_0_30px_-5px_rgba(59,130,246,0.3)] transition-all duration-500 overflow-hidden">
+              <textarea 
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="请直接输入您需要分析的数据，如：近一个月的收入相比去年做个详细分析"
+                className="w-full p-5 text-sm bg-transparent border-none focus:ring-0 min-h-[100px] resize-none placeholder:text-gray-400"
+              />
+              
+              <div className="flex items-center justify-between px-5 py-4 bg-gray-50/30 border-t border-gray-50">
+                <div className="flex items-center gap-6">
+                  <button className="flex items-center gap-2 text-xs text-gray-500 hover:text-blue-600 transition-colors">
+                    <div className="w-4 h-4 border border-gray-300 rounded flex items-center justify-center" />
+                    上下文理解
+                  </button>
+                  <button className="flex items-center gap-2 text-xs text-gray-500 hover:text-blue-600 transition-colors">
+                    <LayoutDashboard size={14} />
+                    快捷提问
+                  </button>
+                  <button className="flex items-center gap-2 text-xs text-gray-500 hover:text-blue-600 transition-colors">
+                    <Database size={14} />
+                    智能路由
+                  </button>
+                  <button className="flex items-center gap-2 text-xs text-gray-500 hover:text-blue-600 transition-colors">
+                    <Grid size={14} />
+                    更多
+                  </button>
+                </div>
+                
+                <button 
+                  className={`p-2.5 rounded-xl transition-all ${input.trim() ? 'bg-blue-600 text-white shadow-lg shadow-blue-200' : 'bg-gray-100 text-gray-400'}`}
+                >
+                  <Send size={20} />
                 </button>
               </div>
-              
-              <button 
-                className={`p-2.5 rounded-xl transition-all ${input.trim() ? 'bg-blue-600 text-white shadow-lg shadow-blue-200' : 'bg-gray-100 text-gray-400'}`}
-              >
-                <Send size={20} />
-              </button>
             </div>
           </div>
         </div>
